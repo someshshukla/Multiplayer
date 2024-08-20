@@ -18,12 +18,12 @@ public class ShootBall : NetworkBehaviour
         }
     }
     [ServerRpc]
-    private void ShootServerRpc()
+    private void ShootServerRpc(ServerRpcParams serverRpcParams = default)
     {
         GameObject go = Instantiate(ball, shootTransform.position, shootTransform.rotation);
         spawnedBalls.Add(go);
         go.GetComponent<MoveBall>().parent = this;
-        go.GetComponent<NetworkObject>().Spawn();
+        go.GetComponent<NetworkObject>().SpawnWithOwnership(serverRpcParams.Receive.SenderClientId);
     }
 
     [ServerRpc(RequireOwnership = false)]
